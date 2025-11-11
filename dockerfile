@@ -6,7 +6,10 @@ COPY . ${LAMBDA_TASK_ROOT}
 
 # Install system dependencies required to build numpy/pandas
 RUN pip install --upgrade pip \
- && pip install --only-binary=:all: -r requirements.txt
+ && pip install --no-cache-dir -r requirements.txt
+
+# Install Playwright Chromium + system dependencies
+RUN python -m playwright install chromium --with-deps
 
 # Set the Lambda handler (module.function)
 CMD ["main.lambda_handler"]
