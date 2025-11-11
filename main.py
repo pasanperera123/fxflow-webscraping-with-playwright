@@ -10,11 +10,8 @@ s3 = boto3.client("s3")
 
 def lambda_handler(event=None, context=None):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        context = browser.new_context(
-            viewport={"width": 1920, "height": 1080}, 
-            device_scale_factor=1
-            )
+        browser = p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+        context = browser.new_context()
         page = context.new_page()
         page.goto("https://www.cbsl.gov.lk/en/rates-and-indicators/exchange-rates/daily-buy-and-sell-exchange-rates")
         page.wait_for_selector("iframe#iFrameResizer2")
