@@ -1,0 +1,12 @@
+*.tf
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+webscraper.py
+webscraping_with_playwright.py
+terraform_support_docs.txt
+README.md
+Dockerfile
+.dockerignore
+playwright_support_docs.txt
