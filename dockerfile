@@ -9,6 +9,6 @@ RUN pip install --upgrade pip \
  && pip install --only-binary=:all: -r requirements.txt
 
 # Set the Lambda handler (module.function)
-CMD ["fxflow.lambda_handler"]
+CMD ["main.lambda_handler"]
 
 # docker build -t my-lambda-fxflow .
