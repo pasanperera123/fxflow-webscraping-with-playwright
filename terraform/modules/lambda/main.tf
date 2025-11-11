@@ -23,8 +23,8 @@ resource "aws_lambda_function" "lambda" {
   package_type  = "Image"
   role          = var.existing_lambda_role_arn
   image_uri     = var.ecr_image_uri
-  timeout       = 30
-  memory_size   = 512
+  timeout       = 180
+  memory_size   = 2048
 
   environment {
     variables = {

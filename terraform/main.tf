@@ -15,8 +15,8 @@ module "lambda" {
 
 # ✅ Create EventBridge rule module
 module "eventbridge" {
-  source        = "./modules/eventbridge"
-  environment   = var.environment
-  lambda_arn    = module.lambda.lambda_arn
-  lambda_name   = module.lambda.lambda_name
+  source                        = "./modules/eventbridge"
+  environment                   = var.environment
+  lambda_arn                    = module.lambda.lambda_arn
+  existing_eventbridge_role_arn = var.existing_eventbridge_role_arn
 }

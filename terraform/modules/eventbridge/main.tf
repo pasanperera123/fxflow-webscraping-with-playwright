@@ -1,3 +1,8 @@
+variable "existing_eventbridge_role_arn" {
+  type        = string
+  description = "Existing IAM Role ARN for EventBridge Scheduler"
+}
+
 variable "environment" {
   type        = string
   description = "Environment name"
@@ -5,35 +10,35 @@ variable "environment" {
 
 variable "lambda_arn" {
   type        = string
-  description = "ARN of Lambda function"
+  description = "Environment name"
 }
 
-variable "lambda_name" {
-  type        = string
-  description = "Name of Lambda function"
-}
 
-# EventBridge daily rule (9 AM Sri Lanka time = 3:30 UTC)
-resource "aws_cloudwatch_event_rule" "lambda_schedule_rule" {
-  name                = "lambda-${var.environment}-daily-trigger"
-  description         = "Triggers Lambda every day at 9 AM"
+resource "aws_scheduler_schedule" "lambda_schedule" {
+  name        = "fxflow-lambda-schedule-${var.environment}"
+  description = "Triggers Lambda every day at 9 AM Sri Lanka time"
+
+  # Run daily at 9:00 AM SL Time (UTC+5:30 = 3:30 UTC)
   schedule_expression = "cron(30 3 * * ? *)"
+
+  flexible_time_window {
+    mode = "OFF"
+  }
+
+  target {
+    arn      = var.lambda_arn
+    role_arn = var.existing_eventbridge_role_arn  # 👈 Existing role used here
+  }
+
+  state = "ENABLED"
 }
 
-resource "aws_cloudwatch_event_target" "lambda_target" {
-  rule      = aws_cloudwatch_event_rule.lambda_schedule_rule.name
-  target_id = "lambda-${var.environment}-trigger"
-  arn       = var.lambda_arn
+output "schedule_name" {
+  value       = aws_scheduler_schedule.lambda_schedule.name
+  description = "Name of the EventBridge schedule"
 }
 
-resource "aws_lambda_permission" "allow_eventbridge" {
-  statement_id  = "AllowExecutionFromEventBridge"
-  action        = "lambda:InvokeFunction"
-  function_name = var.lambda_name
-  principal     = "events.amazonaws.com"
-  source_arn    = aws_cloudwatch_event_rule.lambda_schedule_rule.arn
-}
-
-output "rule_name" {
-  value = aws_cloudwatch_event_rule.lambda_schedule_rule.name
+output "schedule_arn" {
+  value       = aws_scheduler_schedule.lambda_schedule.arn
+  description = "ARN of the EventBridge schedule"
 }

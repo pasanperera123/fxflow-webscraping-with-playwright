@@ -3,14 +3,14 @@ import datetime
 from playwright.sync_api import sync_playwright
 
 ## S3 configuration
-s3_bucket = "fxflow-s3-7483-8939-6719"
+s3_bucket = "lambda-production-bucket-7483-8939-6719"
 s3_key_prefix = "exchange_rates/"  # optional folder prefix inside S3
 s3 = boto3.client("s3")
 
 
-def lambda_handler():
+def lambda_handler(event=None, context=None):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         context = browser.new_context(
             viewport={"width": 1920, "height": 1080}, 
             device_scale_factor=1
@@ -54,6 +54,6 @@ def lambda_handler():
 
         browser.close()
 
-lambda_handler()
+
 
 
