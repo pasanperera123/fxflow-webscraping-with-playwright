@@ -11,4 +11,4 @@ RUN pip install --upgrade pip \
 # Set the Lambda handler (module.function)
 CMD ["main.lambda_handler"]
 
-# docker build -t my-lambda-scraper .
+# docker build -t my-lambda-fxflow .
