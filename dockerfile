@@ -12,17 +12,17 @@
 # 
 # # docker build -t my-lambda-fxflow .
 
-# Use prebuilt Playwright Python image with Chromium
-FROM mcr.microsoft.com/playwright/python:1.40.0-focal
+FROM --platform=linux/amd64 python:3.11-slim-bookworm
 
-# Copy your Lambda code
-COPY main.py ${LAMBDA_TASK_ROOT}/
-COPY requirements.txt .
+# Copy the current directory contents into the container at /app
+COPY . ${LAMBDA_TASK_ROOT}
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install any needed packages specified in requirements.txt
+RUN pip install -r requirements.txt
 
-# Set Lambda handler
+# Run main.py when the container launches
 CMD ["main.lambda_handler"]
 
-# docker build -t my-lambda-fxflow .
+# docker build -t my-lambda-fxflow-u .
+# docker run -p 80:80 scraper
+
