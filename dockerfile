@@ -15,16 +15,26 @@
 FROM --platform=linux/amd64 python:3.11-slim-bookworm
 
 # Set the working directory in the container
-WORKDIR /app
+WORKDIR /var/task
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy code & requirements
+COPY . .
+
+# Install system dependencies for Chromium
+RUN apt-get update && apt-get install -y \
+    wget curl ca-certificates fonts-liberation \
+    libnss3 libatk1.0-0 libcups2 libxcomposite1 libxdamage1 \
+    libxrandr2 libx11-xcb1 libxss1 libxtst6 libgbm1 libasound2 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
 
-# Run main.py when the container launches
-CMD ["python3", "main.py"]
+# Install Playwright Chromium
+RUN python -m playwright install chromium
+
+# Lambda handler
+CMD ["main.lambda_handler"]
 
 # docker build -t my-lambda-fxflow-u .
 # docker run -p 80:80 scraper
