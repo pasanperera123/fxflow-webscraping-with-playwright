@@ -1,20 +1,8 @@
-# # Use AWS Lambda Python base image
-# FROM public.ecr.aws/lambda/python:3.11
-# 
-# # Copy code into Lambda's default directory
-# COPY . ${LAMBDA_TASK_ROOT}
-# 
-# # Install system dependencies required to build numpy/pandas
-# RUN pip install -r requirements.txt
-# 
-# # Set the Lambda handler (module.function)
-# CMD ["main.lambda_handler"]
-# 
-# # docker build -t my-lambda-fxflow .
-
 # Use an official Python runtime as a parent image
-#FROM python:3.11-slim-bookworm
-FROM public.ecr.aws/lambda/python:3.11
+FROM python:3.11-slim-bookworm
+#FROM public.ecr.aws/lambda/python:3.11
+
+RUN pip install awslambdaric
 
 # Set environment variables
 ENV PIP_NO_CACHE_DIR=1 \
@@ -59,19 +47,18 @@ RUN mkdir -p /tmp/fonts-cache /var/tmp && chmod -R 777 /tmp /var/tmp
 # # Copy the current directory contents into the container at /app
 # COPY . /app
 
-# Copy your application code
 COPY . ${LAMBDA_TASK_ROOT}
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
-#RUN pip install awslambdaric
+
 
 # Install Playwright and its dependencies
 RUN playwright install --with-deps chromium
 
 # Run main.py when the container launches
-#CMD ["python3", "-m", "awslambdaric", "main.lambda_handler"]
-CMD ["main.lambda_handler"]
+CMD ["python3", "-m", "awslambdaric", "main.lambda_handler"]
+
 # docker build -t my-lambda-fxflow .
 # docker run -p 80:80 scraper
 
