@@ -13,7 +13,8 @@
 # # docker build -t my-lambda-fxflow .
 
 # Use an official Python runtime as a parent image
-FROM python:3.11-slim-bookworm
+#FROM python:3.11-slim-bookworm
+FROM public.ecr.aws/lambda/python:3.11
 
 # Set environment variables
 ENV PIP_NO_CACHE_DIR=1 \
@@ -52,22 +53,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Create writable font cache dirs for Chromium
 RUN mkdir -p /tmp/fonts-cache /var/tmp && chmod -R 777 /tmp /var/tmp
 
-# Set the working directory in the container
-WORKDIR /app
+# # Set the working directory in the container
+# WORKDIR /app
+# 
+# # Copy the current directory contents into the container at /app
+# COPY . /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy your application code
+COPY . ${LAMBDA_TASK_ROOT}
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
-RUN pip install awslambdaric
+#RUN pip install awslambdaric
 
 # Install Playwright and its dependencies
 RUN playwright install --with-deps chromium
 
 # Run main.py when the container launches
-CMD ["python3", "-m", "awslambdaric", "main.lambda_handler"]
-
+#CMD ["python3", "-m", "awslambdaric", "main.lambda_handler"]
+CMD ["main.lambda_handler"]
 # docker build -t my-lambda-fxflow .
 # docker run -p 80:80 scraper
 
