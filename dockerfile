@@ -13,7 +13,7 @@
 # # docker build -t my-lambda-fxflow .
 
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim-buster
+FROM python:3.9-slim-bookworm
 
 # Set environment variables
 ENV PIP_NO_CACHE_DIR=1 \
@@ -56,8 +56,6 @@ COPY . /app
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# Install Playwright Chromium
-RUN python -m playwright install chromium
 
 # Install Playwright and its dependencies
 RUN playwright install
