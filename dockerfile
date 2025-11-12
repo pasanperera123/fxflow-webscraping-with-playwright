@@ -18,7 +18,8 @@ FROM python:3.9-slim-bookworm
 # Set environment variables
 ENV PIP_NO_CACHE_DIR=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright \
+    PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=0
 
 # Install system dependencies for Playwright
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -43,9 +44,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpango-1.0-0 \
     libcairo2 \
     libasound2 \
+    fonts-liberation \
     wget \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create writable font cache dirs for Chromium
+RUN mkdir -p /tmp/fonts-cache /var/tmp && chmod -R 777 /tmp /var/tmp
 
 # Set the working directory in the container
 WORKDIR /app
