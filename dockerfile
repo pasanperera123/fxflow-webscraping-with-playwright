@@ -17,10 +17,11 @@ FROM python:3.9-slim-bookworm
 
 # Set environment variables
 ENV PIP_NO_CACHE_DIR=1 \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 # Install system dependencies for Playwright
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     libglib2.0-0 \
     libnss3 \
     libnspr4 \
@@ -43,8 +44,8 @@ RUN apt-get update && apt-get install -y \
     libcairo2 \
     libasound2 \
     wget \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory in the container
 WORKDIR /app
@@ -53,12 +54,11 @@ WORKDIR /app
 COPY . /app
 
 # Install Python dependencies
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 
 # Install Playwright and its dependencies
-RUN playwright install
+RUN playwright install --with-deps chromium
 
 # Run main.py when the container launches
 CMD ["python3", "main.py"]

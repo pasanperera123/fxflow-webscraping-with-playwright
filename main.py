@@ -10,7 +10,13 @@ s3 = boto3.client("s3")
 
 def lambda_handler(event=None, context=None):
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-dev-shm-usage"])
+        browser = p.chromium.launch(headless=True, args=[
+        "--no-sandbox",
+        "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--disable-setuid-sandbox",
+        "--disable-software-rasterizer",
+    ])
         context = browser.new_context()
         page = context.new_page()
         page.goto("https://www.cbsl.gov.lk/en/rates-and-indicators/exchange-rates/daily-buy-and-sell-exchange-rates")
