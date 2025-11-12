@@ -13,7 +13,7 @@
 # # docker build -t my-lambda-fxflow .
 
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim-bookworm
+FROM python:3.11-slim-bookworm
 
 # Set environment variables
 ENV PIP_NO_CACHE_DIR=1 \
@@ -60,13 +60,13 @@ COPY . /app
 
 # Install Python dependencies
 RUN pip install --upgrade pip && pip install -r requirements.txt
-
+RUN pip install awslambdaric
 
 # Install Playwright and its dependencies
 RUN playwright install --with-deps chromium
 
 # Run main.py when the container launches
-CMD ["python3", "main.py"]
+CMD ["python3", "-m", "awslambdaric", "main.lambda_handler"]
 
 # docker build -t my-lambda-fxflow .
 # docker run -p 80:80 scraper

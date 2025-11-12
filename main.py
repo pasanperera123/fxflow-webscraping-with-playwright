@@ -68,7 +68,7 @@ def lambda_handler(event=None, context=None):
 
     sys.exit(0)
 
-lambda_handler()
+#lambda_handler()
 
 
 
