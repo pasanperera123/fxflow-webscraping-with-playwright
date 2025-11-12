@@ -1,7 +1,7 @@
 import boto3
 import datetime
 from playwright.sync_api import sync_playwright
-import sys
+#import sys
 
 ## S3 configuration
 s3_bucket = "lambda-production-bucket-7483-8939-6719"
@@ -65,8 +65,12 @@ def lambda_handler(event=None, context=None):
 
 
         browser.close()
-
-    sys.exit(0)
+        
+    return {
+        "statusCode": 200,
+        "body": f"✅ Uploaded successfully to s3://{s3_bucket}/{s3_key}"
+    }
+#    sys.exit(0)
 
 #lambda_handler()
 
